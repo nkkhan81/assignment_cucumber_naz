@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Created by nkkhan on 2/10/18.
  */
-public class DarkSkyTimelineSD {
+public class DarkSkySD {
     private DarkSkyHomePage darkSkyHomePage = new DarkSkyHomePage();
     private DarkSkyDetailsPage detailsPage = new DarkSkyDetailsPage();
 

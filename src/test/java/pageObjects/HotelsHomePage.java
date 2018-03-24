@@ -1,18 +1,15 @@
 package pageObjects;
 
+import cucumber.api.java.en.When;
 import framework.BasePage;
+import framework.BasePaseJS;
 import org.openqa.selenium.*;
 import org.testng.Assert;
 
 import java.text.ParseException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
-
-import static java.time.temporal.ChronoUnit.DAYS;
 
 /**
  * Created by nkkhan on 2/13/18.
@@ -20,13 +17,14 @@ import static java.time.temporal.ChronoUnit.DAYS;
 public class HotelsHomePage extends BasePage {
 
     //Locators
+    private By promoAlert = By.cssSelector("#managed-overlay");
+    private By popupCloseButton = By.xpath("//button[@class='cta widget-overlay-close']");
     private By whereToDestination = By.xpath("//input[@name='q-destination']");
     private By checkInField = By.cssSelector("input.query-localised-check-in");
     private By checkOutField = By.cssSelector("input.query-localised-check-out");
     private By DatePickerCheckInAndOut = By.xpath("//div[@class='widget-datepicker-bd']/descendant::a");
     private By calendarHeader = By.xpath("//div[@class='widget-daterange-cont']/div[1]/div/div");
     private By nextButton = By.xpath("//html//div[2]/div[1]/button[2]");
-    private By nextButtonForList = By.xpath("//div[@class='widget-datepicker-hd'][1]/button[2]");
     private By noOfNight = By.xpath("//span[@class='widget-query-num-nights']");
     private By searchButton = By.xpath("//button[@type='submit']");
     private By numberOfHotels = By.xpath("//div[@class='filters-summary']/p");
@@ -36,11 +34,43 @@ public class HotelsHomePage extends BasePage {
     private By childrenDropDown = By.xpath("//select[@id='qf-0q-room-0-children']");
     private By child1DropDown = By.xpath("//select[@id='qf-0q-room-0-child-0-age']");
     private By child2DropDown = By.xpath("//select[@id='qf-0q-room-0-child-1-age']");
-    private By autosuggestResults = By.xpath("//div[@class='autosuggest-category-result']");
+    private By autoSuggestResults = By.xpath("//div[@class='autosuggest-category-result']");
+    private By giftCardTab = By.id("hdr-gift-card");
+    private By groupsTab = By.id("hdr-groups");
+    private By packagesTab = By.id("hdr-packages");
+    private By signInTab = By.id("hdr-account");
+    private By signInMenuItem = By.xpath("//a[@id='hdr-signin']");
+    private By helpTab = By.id("hdr-help");
+
     private String dayPattern = "MM-dd-yyyy";
 
 
     //methods
+    private boolean isPromoAlertDisplayed(){
+        int count = getDriver().findElements(promoAlert).size();
+        if (count <= 0){
+            return false;
+        }else {
+            return true;
+        }
+    }
+
+//    public boolean isPromoAlertDisplayed(){
+//        return getDriver().findElement(promoAlert).isDisplayed();
+//    }
+
+    public void verifyHomePage(){
+        if (isPromoAlertDisplayed() == true){
+            getDriver().findElement(popupCloseButton).click();
+        }
+        Assert.assertEquals(getDriver().getTitle(),"Hotels.com - Cheap Hotels, Discount Rates & Hotel Deals", "Invalid Home Page");
+    }
+
+
+    public void clickCloseAlert(){
+        clickOn(popupCloseButton);
+    }
+
     public void clickOnCheckInField() throws InterruptedException {
         clickOn(checkInField);
     }
@@ -142,9 +172,26 @@ public class HotelsHomePage extends BasePage {
     public void clickOnAutoSuggestResult(String city){
 
         try {
-            selectFromAutoCompleteMenu(autosuggestResults,city);
+            selectFromAutoCompleteMenu(autoSuggestResults,city);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
+
+    public void clickOnGiftCard(){
+        clickOn(giftCardTab);
+    }
+
+    public void clickOnGroups(){
+        clickOn(groupsTab);
+    }
+
+    public void clickOnPackageTab(){clickOn(packagesTab);}
+
+    public void clickOnSignin(){clickOn(signInTab);}
+
+    public void clickOnsignInMenuItem(){clickOn(signInMenuItem);}
+
+    public void clickOnHelp(){clickOn(helpTab);}
+
 }

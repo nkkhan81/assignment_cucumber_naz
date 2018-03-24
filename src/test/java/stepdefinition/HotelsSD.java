@@ -4,8 +4,8 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import pageObjects.HotelsHomePage;
+import pageObjects.HotelsPackagesPage;
 import pageObjects.HotelsSearchPage;
-import org.openqa.selenium.By;
 import org.testng.Assert;
 
 import java.text.ParseException;
@@ -13,21 +13,19 @@ import java.text.ParseException;
 /**
  * Created by mohammadmuntakim on 6/9/17.
  */
-public class HotelsDatePickerSD {
+public class HotelsSD {
 
     private HotelsHomePage hotels = new HotelsHomePage();
     private HotelsSearchPage searchPage = new HotelsSearchPage();
-    private By popup = By.xpath("//button[@class='cta widget-overlay-close']");
+    private HotelsPackagesPage packagesPage = new HotelsPackagesPage();
 
     @Given("^I am on hotels home page$")
     public void hotelsHomePage(){
-//        if (BasePage.getDriver().findElement(popup).isEnabled() ==true){
-//            BasePage.getDriver().findElement(popup).click();
-//        }
-        Assert.assertEquals(SharedSD.getDriver().getTitle(),"Hotels.com - Cheap Hotels, Discount Rates & Hotel Deals", "Invalid Home Page");
+        hotels.verifyHomePage();
     }
 
-    @When("^I click on (Check in|Check out|Destination|search button) field on home page$")
+
+    @When("^I click on (Check in|Check out|Destination|search button|groups tab) on home page$")
     public void clickOnFields(String fields) throws InterruptedException {
 
         switch (fields) {
@@ -43,7 +41,26 @@ public class HotelsDatePickerSD {
             case "search button":
                 hotels.clickOnSearch();
                 break;
+            case "groups tab":
+                hotels.clickOnGroups();
+                break;
         }
+    }
+
+    @When("^I click groups tab on home page$")
+    public void clickOnGroupsTab() {
+        hotels.clickOnGroups();
+    }
+
+    @When("^I click Help tab on home page$")
+    public void clickOnHelp() {
+        hotels.clickOnHelp();;
+    }
+
+    @When("^I find the Gift Card tab and click on it at home page$")
+    public void clickOnGiftCard() throws InterruptedException {
+        hotels.clickOnGiftCard();
+        Thread.sleep(3000);
     }
 
     @When("^I click on (occupancy|rooms|adult|children|child1|child2) drop down menu and select (More options…|1|2|2|<1|3)$")
@@ -111,6 +128,33 @@ public class HotelsDatePickerSD {
         hotels.clickOnAutoSuggestResult(city);
     }
 
+    @When("^I click (Packages tab|Things to Do tab|search button|Chicago Haunted Pub Tour) on home page$")
+    public void clickOnPackages(String buttons){
+        switch (buttons){
+            case "Packages tab":
+                hotels.clickOnPackageTab();
+                break;
+            case "Things to Do tab":
+                packagesPage.clickOnThingsToDo();
+                break;
+            case "search button":
+                packagesPage.clickOnSearch();
+                break;
+            case "Chicago Haunted Pub Tour":
+                packagesPage.clickOnPubTour("Chicago Haunted Pub Tour");
+                break;
+        }
+    }
+
+    @When("^I click Sign in & Account tab on home page$")
+    public void clickOnSigninTab() {
+        hotels.clickOnSignin();
+    }
+    @When("^I click Sign in Option$")
+    public void clickOnSigninMenuItem() {
+        hotels.clickOnsignInMenuItem();
+    }
+
     @Then("^I veryfy list of hotels are displayed$")
     public void verifyHotels(){
         hotels.verifyHotelsSelected();
@@ -131,4 +175,5 @@ public class HotelsDatePickerSD {
     public void verifyOccupancy(String occupancy){
         searchPage.verifyOccupancyInformation(occupancy);
     }
+
 }

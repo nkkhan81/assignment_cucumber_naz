@@ -83,6 +83,8 @@ public class SharedSD {
 		driver.manage().timeouts().implicitlyWait(10,TimeUnit.SECONDS);
 		driver.get(configReader.getHotels_url());
 //		driver.get(configReader.getDarksky_url());
+
+		driver.manage().window().fullscreen();
 	}
 
 	@After

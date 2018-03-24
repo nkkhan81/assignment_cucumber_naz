@@ -17,7 +17,7 @@ import org.junit.runner.RunWith;
         features = {"src/test/resources/features"},
 
         // Specify tags to be executed
-        tags = {"@calendar"},
+        tags = {"@hotel-TA7-3"},
 
         //Specify step definition package name (Note: make sure to have this package on current directory)
         glue = {"stepdefinition"}

@@ -17,7 +17,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
+
 
 /**
  * Created by mohammadmuntakim on 6/9/17.
@@ -60,7 +62,6 @@ public class BasePage {
 	public void sendText(By locator, String value){
 		elementWithWait(locator).sendKeys(value);
 	}
-
 
 
 	//  4) To get text value from an element
@@ -137,6 +138,30 @@ public class BasePage {
 			return null;
 		}
 	}
+	public List list(By locator){
+		List<WebElement> elementList = getDriver().findElements(locator);
+		return elementList;
+	}
+
+	public void selectFromAutoSuggestJS(By locator, String jsScriptForElement, String matchingValue){
+		useKey(locator,Keys.ARROW_DOWN);
+		JavascriptExecutor js = (JavascriptExecutor)getDriver();
+		String jsScript = jsScriptForElement;
+		String elementText = (String) js.executeScript(jsScript);
+
+		int i=0;
+
+		while(!elementText.equalsIgnoreCase(matchingValue)){
+			i++;
+			useKey(locator,Keys.ARROW_DOWN);
+			elementText = (String) js.executeScript(jsScript);
+			System.out.println(elementText);
+
+			if(i==9){
+				break;
+			}
+		}
+	}
 
 
 	//  12) to select current date from a  date picker
@@ -167,6 +192,7 @@ public class BasePage {
 		List<String> listOfWindows = new ArrayList<>(getDriver().getWindowHandles());
 		getDriver().switchTo().window(listOfWindows.get(index));
 	}
+
 
 
 	//  15) closes current window and switches back to root window
@@ -250,9 +276,38 @@ public class BasePage {
 		}
 	}
 
+	//if the locator is different for calendar Header Month and Year, use bellow method
+	public void selectCustomDateFromDatePicker(String inputDate, By calendarHeaderMonth, By calendarHeaderYear, By nextButton, By dates) throws ParseException {
+		SimpleDateFormat simpleDF = new SimpleDateFormat("MM-dd-yyyy");
+		Date date = simpleDF.parse(inputDate);
+
+		SimpleDateFormat sdfDay = new SimpleDateFormat("d");
+		SimpleDateFormat sdfMonth = new SimpleDateFormat("MMMM");
+		SimpleDateFormat sdfYear = new SimpleDateFormat("yyyy");
+		String day = sdfDay.format(date);
+		String month = sdfMonth.format(date).toLowerCase();
+		String year = sdfYear.format(date);
+		String monthAndYear = (month+" "+year);
+
+		while(!(elementWithWait(calendarHeaderMonth).getText().toLowerCase()+" "+elementWithWait(calendarHeaderYear).getText()).contains(monthAndYear)){
+			elementWithWait(nextButton).click();
+		}
+
+
+		List<WebElement> days = getDriver().findElements(dates);
+
+		for(WebElement element : days){
+			String expectedDate = element.getText();
+			if(expectedDate.equals(day)){
+				element.click();
+				break;
+			}
+		}
+	}
+
 
 	//  19)  method for press any key
-	public void useKey(By locator, Keys key){
+	public static void useKey(By locator, Keys key){
 		elementWithWait(locator).sendKeys(key);
 	}
 
@@ -323,6 +378,137 @@ public class BasePage {
 
 		return result;
 	}
+
+	//	27)	to slide into a slideBar
+	public void sliderMove(By slider) throws InterruptedException {
+//		WebElement sliderElement = getDriver().findElement(slider);
+//
+//		//Using Action Class
+//		Actions move = new Actions(getDriver());
+//		Action action = move.dragAndDropBy(sliderElement, xAxis, 0).build();
+//		action.perform();
+
+
+//		WebElement silder = elementWithWait(slider);
+//		Dimension dim = silder.getSize();
+//		int x = dim.getWidth();
+//		System.out.println(x);
+		Actions action = new Actions(getDriver());
+//		// Code of Silder
+//		act.clickAndHold(silder).moveByOffset(x-xAxis, 0).release().build().perform();
+//
+//		WebElement element = getDriver().findElement(slider);
+//		action.click(element).build().perform();
+//		Thread.sleep(1000);
+//		for (int i = 0; i < 30; i++) {
+//			action.sendKeys(Keys.ARROW_LEFT).build().perform();
+//			Thread.sleep(200);
+//		}
+
+
+		List<WebElement> tolTips = getDriver().findElements(slider);
+		WebElement tolTip1 = tolTips.get(1);
+		WebElement tolTip2 = tolTips.get(0);
+		action.click(tolTip1).build().perform();
+		Thread.sleep(1000);
+		for (int i = 0; i < 30; i++) {
+			action.sendKeys(Keys.ARROW_LEFT).build().perform();
+			Thread.sleep(200);
+		}
+		Actions action2 = new Actions(getDriver());
+		action2.click(tolTip2).build().perform();
+		Thread.sleep(1000);
+		for (int i = 0; i < 40; i++) {
+			action2.sendKeys(Keys.ARROW_RIGHT).build().perform();
+			Thread.sleep(200);
+		}
+
+
+		/**
+		 * WebElement elem = driver.findElement(By.className("ytp-progress-bar"));
+
+		 int width = elem.getSize().getWidth();
+
+		 Actions act = new Actions(driver);
+		 act.moveToElement(elem).moveByOffset((width/2)-2, 0).click().perform();
+		 */
+	}
+	//if you want to move a slider from one point to another
+	//here 'WebElement slider' is the button of the slider bar which you want to click and hold
+	public void moveSlider(WebElement slider, int xOffset, int yOffset) throws Exception {
+
+		Actions moveSlider = new Actions(getDriver());
+		Action action = moveSlider.clickAndHold(slider)
+				.moveByOffset(xOffset, yOffset)
+				.release()
+				.build();
+		action.perform();
+		Thread.sleep(500);
+	}
+
+	//Another variation of this methods is when you're using not offset parameters, but locators for start and end points between which you want to move your element.
+	public void dragAndDrop2(WebElement element, int xOffset, int yOffset) throws Exception {
+		Actions builder = new Actions(getDriver());
+		Action dragAndDrop = builder.dragAndDropBy(element, xOffset, yOffset) .build();
+		dragAndDrop.perform();
+	}
+
+	//sendText method which slowly enter the text into text field
+	public void sendTextSlowly(By locator, String value){
+		String val = value;
+		WebElement element = getDriver().findElement(locator);
+//		element.clear();
+
+		char[] chars = value.toCharArray();
+
+		for (int i = 0; i < chars.length; i++){
+			char c = chars[i];
+			String s = new StringBuilder().append(c).toString();
+			element.sendKeys(s);
+			try {
+				Thread.sleep(250);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	//Generate Random alphanumeric string
+
+	private static final String ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+	public String generateString(int length) {
+		Random random = new Random();
+		StringBuilder builder = new StringBuilder(length);
+
+		for (int i = 0; i < length; i++) {
+			builder.append(ALPHABET.charAt(random.nextInt(ALPHABET.length())));
+		}
+		return builder.toString();
+	}
+
+	//copy text from text field
+	public void sendTextAndCopy(By locator, String text){
+		WebElement elem = getDriver().findElement(locator);
+		elem.sendKeys(text);
+		String selectAll = Keys.chord(Keys.CONTROL, "a");
+		elem.sendKeys(selectAll);
+
+		String copy = Keys.chord(Keys.CONTROL, "c");
+		elem.sendKeys(copy);
+	}
+
+	//paste text in a text field
+	public void pasteText(By locator){
+		WebElement elem = getDriver().findElement(locator);
+//		elem.click();
+//		String selectAll = Keys.chord(Keys.CONTROL, "a");
+//		elem.sendKeys(selectAll);
+
+		String copy = Keys.chord(Keys.CONTROL, "v");
+		elem.sendKeys(copy);
+	}
+
 
 	//	private method for fluentWait
 	private static WebElement elementWithWait(By locator){
