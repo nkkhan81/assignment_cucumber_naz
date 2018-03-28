@@ -1,8 +1,6 @@
 package pageObjects;
 
-import cucumber.api.java.en.When;
 import framework.BasePage;
-import framework.BasePaseJS;
 import org.openqa.selenium.*;
 import org.testng.Assert;
 

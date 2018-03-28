@@ -25,7 +25,7 @@ public class HotelsSD {
     }
 
 
-    @When("^I click on (Check in|Check out|Destination|search button|groups tab) on home page$")
+    @When("^I clicked on (Check in|Check out|Destination|search button|groups tab) on home page$")
     public void clickOnFields(String fields) throws InterruptedException {
 
         switch (fields) {
@@ -63,7 +63,7 @@ public class HotelsSD {
         Thread.sleep(3000);
     }
 
-    @When("^I click on (occupancy|rooms|adult|children|child1|child2) drop down menu and select (More options…|1|2|2|<1|3)$")
+    @When("^I click the (occupancy|rooms|adult|children|child1|child2) drop down menu and select (More options…|1|2|2|<1|3)$")
     public void dropDowns(String field, String value) throws InterruptedException {
 
         switch (field) {
@@ -123,7 +123,7 @@ public class HotelsSD {
         hotels.insertIntoDestField(destination);
     }
 
-    @When("^I click on (.+) from auto suggestion$")
+    @When("^I clicked on (.+) from autoSuggestions$")
     public void clickOnAutoSuggestedItem(String city) throws InterruptedException {
         hotels.clickOnAutoSuggestResult(city);
     }

@@ -52,7 +52,6 @@ public class HotelsGroupPage extends BasePage {
 
     private By nearByPlace = By.xpath("//input[@id='eventPlace']");
     private By continueStep3 = By.xpath("//div[@class='rd-fields-group']/button[1]");
-    private By IDontHavePlaceInMind = By.xpath("//a[@class='rd-cancel-button']");
 
     private By viewHotels = By.xpath("//div[@class='rfp-modal-content']/button");
     private By groupDetaisContainer = By.xpath("//div[@id='group-details-container']");
