@@ -19,6 +19,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 
 /**
@@ -485,6 +487,30 @@ public class BasePage {
 			builder.append(ALPHABET.charAt(random.nextInt(ALPHABET.length())));
 		}
 		return builder.toString();
+	}
+
+
+	//	To verify the broken link in a web page
+	public static void verifyActiveLink(String linkUrl)
+	{
+		try
+		{
+			URL url = new URL(linkUrl);
+			HttpURLConnection httpURLConnect=(HttpURLConnection)url.openConnection();
+			httpURLConnect.setConnectTimeout(3000);
+			httpURLConnect.connect();
+			if(httpURLConnect.getResponseCode()==200)
+			{
+				System.out.println(linkUrl+" - "+httpURLConnect.getResponseMessage());
+			}
+			if(httpURLConnect.getResponseCode()==HttpURLConnection.HTTP_NOT_FOUND)
+			{
+				System.out.println(linkUrl+" - "+httpURLConnect.getResponseMessage() + " - "+ HttpURLConnection.HTTP_NOT_FOUND);
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	//copy text from text field

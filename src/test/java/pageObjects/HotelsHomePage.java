@@ -1,6 +1,7 @@
 package pageObjects;
 
 import framework.BasePage;
+import java.awt.Robot;
 import org.openqa.selenium.*;
 import org.testng.Assert;
 

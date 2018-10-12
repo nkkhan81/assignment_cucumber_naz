@@ -6,7 +6,7 @@ Feature: Verify dates from date pickers
 
   @hotel-TA7-1
   Scenario: Verify shopping cart functionality for hotels.com gift card
-    And I find the Gift Card tab and click on it at home page
+    When I find the Gift Card tab and click on it at home page
     And I switch to the new window, scroll down and click on Buy now button
     Then I verify Your Cart is empty. at the right panel of the gift card section
     When I insert Happy Birthday into message input field

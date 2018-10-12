@@ -67,10 +67,10 @@ public class BasePaseJS {
 
         //vertical scroll down by 150 pixel
         jse.executeScript("window.scrollBy("+xAxis+","+yAxis+")");
-        Thread.sleep(10000);
+        Thread.sleep(1000);
     }
 
-
+//RAHILRAFATNITUNAZMUL
 
     //  private method for fluentWait
     private static WebElement elementWithWait(By locator){
