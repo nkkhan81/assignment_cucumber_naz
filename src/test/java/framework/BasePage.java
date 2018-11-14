@@ -475,6 +475,35 @@ public class BasePage {
 		}
 	}
 
+	/*int frameNumber = getFrameNumber(By by);
+
+driver.switchTo().frame(frameNumber);
+
+driver.findElement(by).click();
+
+driver.switchTo().defaultContent();*/
+
+	//to get the frame number for a element inside the frame
+	public int getFrameNumber(By by) {
+		getDriver().switchTo().defaultContent();
+		int i;
+		int num = -1;
+		int frameCount = getDriver().findElements(By.tagName("iframe")).size();
+		for(i=0;i<frameCount;i++) {
+			getDriver().switchTo().defaultContent();
+			getDriver().switchTo().frame(i);
+			int numberOfElement = getDriver().findElements(by).size();
+			if(numberOfElement>0) {
+				num=i;
+				break;
+			}
+		}
+		getDriver().switchTo().defaultContent();
+		return num;
+	}
+
+
+
 	//Generate Random alphanumeric string
 
 	private static final String ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
